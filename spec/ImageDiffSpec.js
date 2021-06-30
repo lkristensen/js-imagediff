@@ -108,7 +108,7 @@ describe('ImageUtils', function() {
       beforeAll(function (done) {
         loadImage(image, 'spec/images/checkmark.png', done);
       });
-
+      
       it('should convert Image to ImageData', function () {
         var
           canvas = imagediff.createCanvas(image.width, image.height),

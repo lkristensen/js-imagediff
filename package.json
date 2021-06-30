@@ -4,7 +4,7 @@
   "browser": {
     "canvas": "./browser/canvas.js"
   },
-  "description": "JavaScript Canvas based imagediff utility.",
+  "description": "JavaScript Canvas based imagediff utinpm ity.",
   "homepage": "http://HumbleSoftware.github.com/js-imagediff/",
   "scripts": {
     "build": "smoosh make/build.json",
@@ -28,9 +28,9 @@
     "canvas": ">=2.6.1"
   },
   "devDependencies": {
-    "jasmine": "^3.5.0",
+    "jasmine": "^3.7.0",
     "karma": "^4.4.1",
-    "karma-jasmine": "^3.1.0",
+    "karma-jasmine": "^3.3.1",
     "karma-phantomjs-launcher": "^1.0.4",
     "smoosh": ">=0.3.1"
   },

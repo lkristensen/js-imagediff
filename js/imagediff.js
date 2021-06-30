@@ -335,9 +335,9 @@
           return {
             pass: pass,
             message: pass ? 'Is ImageData' : 'Is not ImageData'
-          }
+          };
         }
-      }
+      };
     },
 
     toImageDiffEqual : function () {
@@ -346,12 +346,10 @@
           var pass = imagediff.equal(actual, expected, tolerance);
           return {
             pass: pass,
-            message: pass
-              ? 'Expected not to be equal.'
-              : formatImageDiffEqualReport(actual, expected)
+            message: pass ? 'Expected not to be equal.' : formatImageDiffEqualReport(actual, expected)
           };
         }
-      }
+      };
     }
   };
 
