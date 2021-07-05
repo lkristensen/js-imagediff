@@ -151,6 +151,13 @@
     context.putImageData(data, 0, 0);
     return canvas;
   }
+  function toURIImage (object) {
+    var
+       canvas = toCanvas(object);
+       img = document.createElement("img");
+       img.setAttribute("src", canvas.toDataURL('image/jpeg'));
+       return img;
+  }
 
 
   // ImageData Equality Operators
@@ -299,6 +306,8 @@
 
   function formatImageDiffEqualHtmlReport (actual, expected) {
     var
+      clear1  = document.createElement("div"),
+      clear2  = document.createElement("div"),
       div     = get('div', '<span>Expected to be equal.'),
       a       = get('div', '<div>Actual:</div>'),
       b       = get('div', '<div>Expected:</div>'),
@@ -306,6 +315,9 @@
       diff    = imagediff.diff(actual, expected),
       canvas  = getCanvas(),
       context;
+
+    clear1.classList.add("clearfix");
+    clear2.classList.add("clearfix");
 
     canvas.height = diff.height;
     canvas.width  = diff.width;
@@ -317,14 +329,15 @@
 
     context = canvas.getContext('2d');
     context.putImageData(diff, 0, 0);
+    a.appendChild(toURIImage(actual));
+    b.appendChild(toURIImage(expected));
+    c.appendChild(toURIImage(canvas));
 
-    a.appendChild(toCanvas(actual));
-    b.appendChild(toCanvas(expected));
-    c.appendChild(canvas);
-
+    div.appendChild(clear1);
     div.appendChild(a);
     div.appendChild(b);
     div.appendChild(c);
+    div.appendChild(clear2);
 
     return div.innerHTML;
   }
