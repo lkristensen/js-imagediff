@@ -170,18 +170,32 @@
   function equalDimensions (a, b) {
     return equalHeight(a, b) && equalWidth(a, b);
   }
-  function equal (a, b, tolerance) {
+  function equal (a, b, tolerance, pixelDeviation) {
 
     var
       aData     = a.data,
       bData     = b.data,
       length    = aData.length,
+      count     = 0,
       i;
 
     tolerance = tolerance || 0;
+    pixelDeviation = pixelDeviation || 0;
 
-    if (!equalDimensions(a, b)) return false;
-    for (i = length; i--;) if (aData[i] !== bData[i] && Math.abs(aData[i] - bData[i]) > tolerance) return false;
+    if (!equalDimensions(a, b)) {
+      return false;
+    }
+
+    for (i = length; i--;) {
+      if (aData[i] !== bData[i] && 
+        Math.abs(aData[i] - bData[i]) > tolerance
+      ) {
+        count += 1;
+        if(count > pixelDeviation) {
+          return false;
+        }
+      }
+    } 
 
     return true;
   }
@@ -361,8 +375,8 @@
 
     toImageDiffEqual : function () {
       return {
-        compare: function (actual, expected, tolerance) {
-          var pass = imagediff.equal(actual, expected, tolerance);
+        compare: function (actual, expected, tolerance, pixelDeviation) {
+          var pass = imagediff.equal(actual, expected, tolerance, pixelDeviation);
           return {
             pass: pass,
             message: pass ? 'Expected not to be equal.' : formatImageDiffEqualReport(actual, expected)
