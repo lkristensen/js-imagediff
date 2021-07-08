@@ -155,7 +155,7 @@
     var
        canvas = toCanvas(object);
        img = document.createElement("img");
-       img.setAttribute("src", canvas.toDataURL('image/jpeg'));
+       img.setAttribute("src", canvas.toDataURL('image/png'));
        return img;
   }
 
@@ -171,7 +171,6 @@
     return equalHeight(a, b) && equalWidth(a, b);
   }
   function equal (a, b, tolerance, pixelDeviation) {
-
     var
       aData     = a.data,
       bData     = b.data,
@@ -206,7 +205,6 @@
     return (equalDimensions(a, b) ? diffEqual : diffUnequal)(a, b, options);
   }
   function diffEqual (a, b, options) {
-
     var
       height  = a.height,
       width   = a.width,
@@ -219,10 +217,39 @@
       i, j, k, v;
 
     for (i = 0; i < length; i += 4) {
+      /*if (aData[i] !== bData[i] || aData[i+1] !== bData[i+1] || aData[i+2] !== bData[i+2] || aData[i+3] !== bData[i+3]) {
+        let diff = Math.max(Math.abs(aData[i] - bData[i]), Math.abs(aData[i+1] - bData[i+1]),Math.abs(aData[i+2] - bData[i+2]));
+        if (diff < 20) {
+          cData[i] = 255;
+          cData[i+1] = diff;
+          cData[i+2] = diff;
+          cData[i+3] = Math.abs(255 - Math.abs(aData[i+3] + bData[i+3]));
+        } else {
+          cData[i] = diff;
+          cData[i+1] = 255;
+          cData[i+2] = diff;
+          cData[i+3] = Math.abs(255 - Math.abs(aData[i+3] + bData[i+3]));
+        }
+      } else {
+        cData[i] = 0;
+        cData[i+1] = 0;
+        cData[i+2] = 0;
+        cData[i+3] = 255;
+      }*/
+
+
       cData[i] = Math.abs(aData[i] - bData[i]);
       cData[i+1] = Math.abs(aData[i+1] - bData[i+1]);
       cData[i+2] = Math.abs(aData[i+2] - bData[i+2]);
-      cData[i+3] = Math.abs(255 - Math.abs(aData[i+3] - bData[i+3]));
+      cData[i+3] = Math.abs(255 - Math.abs(aData[i+3] + bData[i+3]));
+/*
+      if (aData[i] === bData[i] && aData[i+1] === bData[i+1] && aData[i+2] === bData[i+2] && aData[i+3] !== bData[i+3]) {
+        cData[i] = 255;
+        cData[i+1] = 255;
+        cData[i+2] = 255;
+        cData[i+3] = 255;
+      }
+*/
     }
 
     return c;
@@ -256,7 +283,7 @@
         cData[i+0] = aData[j+0]; // r
         cData[i+1] = aData[j+1]; // g
         cData[i+2] = aData[j+2]; // b
-        // cData[i+3] = aData[j+3]; // a
+        cData[i+3] = aData[j+3]; // a
       }
     }
 
@@ -266,9 +293,11 @@
       for (column = b.width; column--;) {
         i = 4 * ((row + rowOffset) * width + (column + columnOffset));
         j = 4 * (row * b.width + column);
+
         cData[i+0] = Math.abs(cData[i+0] - bData[j+0]); // r
         cData[i+1] = Math.abs(cData[i+1] - bData[j+1]); // g
         cData[i+2] = Math.abs(cData[i+2] - bData[j+2]); // b
+        cData[i+3] = Math.abs(cData[i+3] - bData[j+3]); // a
       }
     }
 
@@ -377,6 +406,7 @@
       return {
         compare: function (actual, expected, tolerance, pixelDeviation) {
           var pass = imagediff.equal(actual, expected, tolerance, pixelDeviation);
+
           return {
             pass: pass,
             message: pass ? 'Expected not to be equal.' : formatImageDiffEqualReport(actual, expected)
@@ -422,11 +452,11 @@
       return toImageData(object);
     },
 
-    equal : function (a, b, tolerance) {
+    equal : function (a, b, tolerance, pixelDeviation) {
       checkType(a, b);
       a = toImageData(a);
       b = toImageData(b);
-      return equal(a, b, tolerance);
+      return equal(a, b, tolerance, pixelDeviation);
     },
     diff : function (a, b, options) {
       checkType(a, b);
